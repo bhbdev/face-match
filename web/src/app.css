@@ -1,0 +1,53 @@
+/*
+ * Palette is taken from the cyanotype, the blue photographic print process of the 1840s:
+ * Prussian-blue ground, pale prints with a paper mat, one warm albumen tone for emphasis.
+ */
+:root {
+	--blue-900: #081b33;
+	--blue-800: #0e2a4a;
+	--blue-700: #17395f;
+	--ink: #e4eef4;
+	--muted: #9bb7cc;
+	--print: #eef1ec;
+	--print-ink: #14263a;
+	--albumen: #e2b66f;
+	--error: #ffb4a8;
+
+	--display: 'Libre Caslon Display', 'Libre Caslon Text', 'Iowan Old Style', Georgia, serif;
+	--serif: 'Libre Caslon Text', 'Iowan Old Style', Georgia, serif;
+	--sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+	color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	background: var(--blue-800);
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	background: var(--blue-800);
+	color: var(--ink);
+	font-family: var(--sans);
+	font-size: 1rem;
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+a {
+	color: var(--ink);
+	text-underline-offset: 3px;
+}
+
+a:focus-visible,
+button:focus-visible {
+	outline: 3px solid var(--albumen);
+	outline-offset: 3px;
+}

@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+node_modules/
+.svelte-kit/
+web/build/
+
+# Downloaded photos and generated crops stay local
+data/historic/*
+data/crops/*
+!data/historic/.gitkeep
+!data/crops/.gitkeep
+
+.DS_Store

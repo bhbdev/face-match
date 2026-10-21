@@ -1,0 +1,54 @@
+name: face-match
+
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-facematch}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-facematch}
+      POSTGRES_DB: ${POSTGRES_DB:-facematch}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # Runs once, when the pgdata volume is first created (see `make reset-db`).
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+
+  api:
+    build: ./api
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-facematch}:${POSTGRES_PASSWORD:-facematch}@db:5432/${POSTGRES_DB:-facematch}
+      DATA_DIR: /data
+      COMMONS_CONTACT: ${COMMONS_CONTACT:-}
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./api:/app
+      - ./data:/data
+      # Keeps the ~300 MB InsightFace model pack between rebuilds.
+      - insightface_models:/root/.insightface
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build: ./web
+    environment:
+      API_URL: http://api:8000
+      # adapter-node rejects uploads over 512 KB by default.
+      BODY_SIZE_LIMIT: "20971520"
+      # Must match the URL you open in the browser (CSRF origin check).
+      ORIGIN: ${WEB_ORIGIN:-http://localhost:3000}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+  insightface_models:

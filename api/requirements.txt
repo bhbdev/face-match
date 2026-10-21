@@ -1,0 +1,15 @@
+# insightface itself is installed separately in the Dockerfile (needs --no-build-isolation).
+numpy<2
+cython
+setuptools
+wheel
+onnxruntime
+opencv-python-headless
+pillow
+fastapi
+uvicorn[standard]
+python-multipart
+psycopg[binary,pool]
+pgvector
+requests
+tqdm
